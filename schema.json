@@ -1,0 +1,238 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Redf",
+  "type": "object",
+  "required": [
+    "description",
+    "endpoints",
+    "license",
+    "maintainers",
+    "title",
+    "version"
+  ],
+  "properties": {
+    "cpp_namespace": {
+      "description": "if not provided, the namespace will be derived from the title",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Endpoint"
+      }
+    },
+    "license": {
+      "type": "string"
+    },
+    "maintainers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Maintainer"
+      }
+    },
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "DurabilityPolicy": {
+      "type": "string",
+      "enum": [
+        "volatile",
+        "transient_local",
+        "system_default"
+      ]
+    },
+    "Duration": {
+      "type": "object",
+      "required": [
+        "nanosecs",
+        "secs"
+      ],
+      "properties": {
+        "nanosecs": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "secs": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Endpoint": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "description",
+            "title",
+            "topic",
+            "type"
+          ],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "qos": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Qos"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": {
+              "type": "string"
+            },
+            "topic": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "topic"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "LivelinessPolicy": {
+      "type": "string",
+      "enum": [
+        "automatic",
+        "manual_by_topic",
+        "system_default"
+      ]
+    },
+    "Maintainer": {
+      "type": "object",
+      "required": [
+        "email",
+        "name"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Qos": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/QosProfile"
+        },
+        {
+          "$ref": "#/definitions/QosPreset"
+        }
+      ]
+    },
+    "QosPreset": {
+      "type": "string",
+      "enum": [
+        "clock",
+        "sensor_data",
+        "parameters",
+        "services",
+        "parameter_events",
+        "rosout",
+        "system_defaults"
+      ]
+    },
+    "QosProfile": {
+      "type": "object",
+      "properties": {
+        "avoid_ros_namespace_conventions": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "deadline": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Duration"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "durability": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DurabilityPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lease_duration": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Duration"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifespan": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Duration"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "liveliness": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LivelinessPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reliability": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ReliabilityPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ReliabilityPolicy": {
+      "type": "string",
+      "enum": [
+        "best_effort",
+        "reliable",
+        "system_default"
+      ]
+    }
+  }
+}

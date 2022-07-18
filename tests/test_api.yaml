@@ -1,0 +1,66 @@
+title: Test Api
+description: test api
+version: 0.0.1
+maintainers:
+  - name: test
+    email: test@test.com
+license: Apache License 2.0
+cpp_namespace: test_namespace::test_api
+endpoints:
+  - title: Full QoS
+    type: topic
+    topic: full_qos
+    description: An endpoint which specifies all qos settings
+    qos:
+      reliability: best_effort
+      durability: volatile
+      deadline: { secs: 10, nanosecs: 1000000 }
+      lifespan: { secs: 20, nanosecs: 2000000 }
+      liveliness: manual_by_topic
+      lease_duration: { secs: 30, nanosecs: 3000000 }
+      avoid_ros_namespace_conventions: false
+  - title: Simple QoS
+    type: topic
+    topic: simple_qos
+    description: An endpoint which only specify a minimal set of qos
+    qos:
+      durability: transient_local
+  - title: No QoS
+    type: topic
+    topic: no_qos
+    description: An endpoint that does not specify any qos settings
+  - title: Clock Preset QoS
+    type: topic
+    topic: clock_preset_qos
+    description: An endpoint which uses the clock qos preset
+    qos: clock
+  - title: ParameterEvents Preset QoS
+    type: topic
+    topic: parameter_events_preset_qos
+    description: An endpoint which uses the paramter events qos preset
+    qos: parameter_events
+  - title: Parameters Preset QoS
+    type: topic
+    topic: parameters_preset_qos
+    description: An endpoint which uses the parameters qos preset
+    qos: parameters
+  - title: Rosout Preset QoS
+    type: topic
+    topic: rosout_preset_qos
+    description: An endpoint which uses the rosout qos preset
+    qos: rosout
+  - title: SensorData Preset QoS
+    type: topic
+    topic: sensor_data_preset_qos
+    description: An endpoint which uses the sensor data qos preset
+    qos: sensor_data
+  - title: Services Preset QoS
+    type: topic
+    topic: services_preset_qos
+    description: An endpoint which uses the services qos preset
+    qos: services
+  - title: SystemDefaults Preset QoS
+    type: topic
+    topic: system_defaults_preset_qos
+    description: An endpoint which uses the system defaults qos preset
+    qos: system_defaults
