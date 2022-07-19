@@ -47,4 +47,5 @@ jobs:
       id: test
       run: |
         cd /home/src/redf
+        /opt/ros/rolling/setup.bash
         cargo test
