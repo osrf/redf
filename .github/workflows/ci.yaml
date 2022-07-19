@@ -34,7 +34,7 @@ jobs:
           build-essential \
           cargo \
           rust-all
-        cd /home/src/redf/test
+        cd /home/src/redf/tests
         rosdep init
         rosdep update
         rosdep install --from-paths ./ -i -y --rosdistro rolling
