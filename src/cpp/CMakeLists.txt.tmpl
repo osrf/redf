@@ -5,9 +5,13 @@ project({{project_name}})
 
 find_package(rclcpp REQUIRED)
 find_package(ament_cmake REQUIRED)
+{{find_packages}}
 
 add_library({{project_name}} INTERFACE {{project_name}}.hpp)
-target_link_libraries({{project_name}} INTERFACE rclcpp::rclcpp)
+target_include_directories({{project_name}} INTERFACE
+{{include_dirs}})
+target_link_libraries({{project_name}} INTERFACE rclcpp::rclcpp
+{{link_libraries}})
 set_target_properties({{project_name}} PROPERTIES PUBLIC_HEADER {{project_name}}.hpp)
 
 install(
@@ -18,10 +22,5 @@ install(
   INCLUDES DESTINATION include/{{project_name}}
 )
 ament_export_targets({{project_name}})
-
-if(BUILD_TESTING)
-  add_executable(build_test test/main.cpp)
-  target_link_libraries(build_test test_api)
-endif()
 
 ament_package()

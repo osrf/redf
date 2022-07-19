@@ -76,12 +76,16 @@
           "type": "object",
           "required": [
             "description",
+            "message_type",
             "title",
             "topic",
             "type"
           ],
           "properties": {
             "description": {
+              "type": "string"
+            },
+            "message_type": {
               "type": "string"
             },
             "qos": {

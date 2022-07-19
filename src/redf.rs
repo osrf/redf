@@ -1,13 +1,17 @@
-use schemars::JsonSchema;
 use serde::Deserialize;
 
-#[derive(Deserialize, JsonSchema)]
+#[cfg(feature = "json_schema")]
+use schemars::JsonSchema;
+
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 pub struct Duration {
     pub secs: i32,
     pub nanosecs: u32,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum ReliabilityPolicy {
     BestEffort,
@@ -15,7 +19,8 @@ pub enum ReliabilityPolicy {
     SystemDefault,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum DurabilityPolicy {
     Volatile,
@@ -23,7 +28,8 @@ pub enum DurabilityPolicy {
     SystemDefault,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum LivelinessPolicy {
     Automatic,
@@ -31,7 +37,8 @@ pub enum LivelinessPolicy {
     SystemDefault,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 pub struct QosProfile {
     pub reliability: Option<ReliabilityPolicy>,
     pub durability: Option<DurabilityPolicy>,
@@ -42,7 +49,8 @@ pub struct QosProfile {
     pub avoid_ros_namespace_conventions: Option<bool>,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum QosPreset {
     Clock,
@@ -54,34 +62,40 @@ pub enum QosPreset {
     SystemDefaults,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 #[serde(untagged)]
 pub enum Qos {
     Profile(QosProfile),
     Preset(QosPreset),
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 pub struct TopicEndpoint {
     pub title: String,
     pub topic: String,
+    pub message_type: String,
     pub description: String,
     pub qos: Option<Qos>,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Endpoint {
     Topic(TopicEndpoint),
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 pub struct Maintainer {
     pub name: String,
     pub email: String,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 pub struct Redf {
     pub title: String,
     pub description: String,
