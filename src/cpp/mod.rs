@@ -70,6 +70,7 @@ fn qos_preset(preset: QosPreset) -> String {
 }
 
 fn topic_endpoint(ep: TopicEndpoint) -> String {
+    let description = ep.description;
     let class = ep.title.to_case(Case::Pascal);
     let topic = ep.topic;
     let message_type = ep.message_type.replace("/", "::");
@@ -86,7 +87,10 @@ fn topic_endpoint(ep: TopicEndpoint) -> String {
     };
 
     format!(
-        r#"class {class} {{
+        r#"/**
+ * {description}
+ */
+class {class} {{
 public:
     using MessageType = {message_type};
 
