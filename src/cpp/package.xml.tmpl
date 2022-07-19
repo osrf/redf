@@ -2,12 +2,18 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>{{project_name}}</name>
-  <version>{{version}}</version>
-  <description>{{description}}</description>
-{{maintainers}}{{license}}
+  <version>{{redf.version}}</version>
+  <description>{{redf.description}}</description>
+  {{#each redf.maintainers}}
+  <maintainer email="{{email}}">{{name}}</maintainer>
+  {{/each}}
+  <license>{{redf.license}}</license>
 
   <depend>rclcpp</depend>
-{{depends}}
+  {{#each packages}}
+  <depend>{{this}}</depend>
+  {{/each}}
+
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <export>

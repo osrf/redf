@@ -5,13 +5,21 @@ project({{project_name}})
 
 find_package(rclcpp REQUIRED)
 find_package(ament_cmake REQUIRED)
-{{find_packages}}
+{{#each packages}}
+find_package({{this}} REQUIRED)
+{{/each}}
 
 add_library({{project_name}} INTERFACE {{project_name}}.hpp)
 target_include_directories({{project_name}} INTERFACE
-{{include_dirs}})
+{{#each packages}}
+  ${ {{~this}}_INCLUDE_DIRS}
+{{/each}}
+)
 target_link_libraries({{project_name}} INTERFACE rclcpp::rclcpp
-{{link_libraries}})
+{{#each packages}}
+  ${ {{~this}}_LIBRARIES}
+{{/each}}
+)
 set_target_properties({{project_name}} PROPERTIES PUBLIC_HEADER {{project_name}}.hpp)
 
 install(

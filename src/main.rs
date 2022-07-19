@@ -1,5 +1,8 @@
 mod cpp;
+mod helpers;
 mod redf;
+
+use std::path::Path;
 
 use clap::{ArgEnum, Parser};
 
@@ -25,7 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let redf = serde_yaml::from_reader(std::fs::File::open(&args.input)?)?;
     std::fs::create_dir_all(&args.out)?;
     match args.gen {
-        Generator::Cpp => cpp::codegen(args, redf)?,
+        Generator::Cpp => cpp::generate(&redf, Path::new(&args.out))?,
     }
     Ok(())
 }
