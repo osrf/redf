@@ -9,7 +9,7 @@ find_package(ament_cmake REQUIRED)
 find_package({{this}} REQUIRED)
 {{/each}}
 
-add_library({{project_name}} INTERFACE {{project_name}}.hpp)
+add_library({{project_name}} INTERFACE)
 target_include_directories({{project_name}} INTERFACE
 {{#each packages}}
   ${ {{~this}}_INCLUDE_DIRS}
