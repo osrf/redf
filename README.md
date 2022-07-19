@@ -77,3 +77,13 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 ```
+
+### Redf Format
+
+The full format of `redf` is available as a json schema [here](./redf.schema.json).
+
+You can also generate the schema from source with
+
+```bash
+cargo run -F json_schema --bin generate-schema
+```
