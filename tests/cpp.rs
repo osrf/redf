@@ -12,7 +12,7 @@ fn cpp() -> Result<(), Box<dyn std::error::Error>> {
     let srcdir = format!("{}/cpp/src", env!("CARGO_TARGET_TMPDIR"));
 
     let result = std::process::Command::new(target)
-        .args(["--out", &outdir, "--gen=cpp", "tests/test_api.yaml"])
+        .args(["--out", &outdir, "--gen=cpp", "tests/test_api.redf.yaml"])
         .output()?;
     assert_command_success(result);
 

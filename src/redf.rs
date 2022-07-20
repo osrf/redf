@@ -113,7 +113,7 @@ mod test {
 
     #[test]
     fn test_deserialize() -> Result<(), Box<dyn std::error::Error>> {
-        let f = std::fs::File::open("tests/test_api.yaml")?;
+        let f = std::fs::File::open("tests/test_api.redf.yaml")?;
         serde_yaml::from_reader::<_, Redf>(f)?;
         Ok(())
     }
