@@ -1,29 +1,63 @@
 use convert_case::{Case, Casing};
-use handlebars::{Context, Handlebars, Helper, Output, RenderContext, RenderError};
+use std::collections::HashMap;
+use tera::{Filter, Result, Tera, Test, Value};
 
-fn snake(
-    h: &Helper,
-    _: &Handlebars,
-    _: &Context,
-    _: &mut RenderContext,
-    out: &mut dyn Output,
-) -> Result<(), RenderError> {
-    out.write(&h.param(0).unwrap().render().to_case(Case::Snake))?;
-    Ok(())
+struct Snake;
+
+impl Filter for Snake {
+    fn filter(&self, value: &Value, _: &HashMap<String, Value>) -> Result<Value> {
+        Ok(Value::String(value.as_str().unwrap().to_case(Case::Snake)))
+    }
 }
 
-fn pascal(
-    h: &Helper,
-    _: &Handlebars,
-    _: &Context,
-    _: &mut RenderContext,
-    out: &mut dyn Output,
-) -> Result<(), RenderError> {
-    out.write(&h.param(0).unwrap().render().to_case(Case::Pascal))?;
-    Ok(())
+struct Pascal;
+
+impl Filter for Pascal {
+    fn filter(&self, value: &Value, _: &HashMap<String, Value>) -> Result<Value> {
+        Ok(Value::String(value.as_str().unwrap().to_case(Case::Pascal)))
+    }
 }
 
-pub fn register_helpers(hbs: &mut Handlebars) -> () {
-    hbs.register_helper("snake", Box::new(snake));
-    hbs.register_helper("pascal", Box::new(pascal));
+struct IsQosPreset;
+
+impl Test for IsQosPreset {
+    fn test(&self, value: Option<&Value>, _: &[Value]) -> Result<bool> {
+        if let Some(v) = value {
+            Ok(v.is_string())
+        } else {
+            Ok(false)
+        }
+    }
+}
+
+struct IsQosProfile;
+
+impl Test for IsQosProfile {
+    fn test(&self, value: Option<&Value>, _: &[Value]) -> Result<bool> {
+        if let Some(v) = value {
+            Ok(v.is_object())
+        } else {
+            Ok(false)
+        }
+    }
+}
+
+struct IsQosDefault;
+
+impl Test for IsQosDefault {
+    fn test(&self, value: Option<&Value>, _: &[Value]) -> Result<bool> {
+        if let Some(v) = value {
+            Ok(v.is_null())
+        } else {
+            Ok(true)
+        }
+    }
+}
+
+pub fn register_helpers(tera: &mut Tera) -> () {
+    tera.register_filter("snake", Snake);
+    tera.register_filter("pascal", Pascal);
+    tera.register_tester("qos_preset", IsQosPreset);
+    tera.register_tester("qos_profile", IsQosProfile);
+    tera.register_tester("qos_default", IsQosDefault);
 }

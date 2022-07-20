@@ -5,20 +5,20 @@ project({{project_name}})
 
 find_package(rclcpp REQUIRED)
 find_package(ament_cmake REQUIRED)
-{{#each packages}}
-find_package({{this}} REQUIRED)
-{{/each}}
+{% for pkg in packages -%}
+find_package({{pkg}} REQUIRED)
+{%- endfor %}
 
 add_library({{project_name}} INTERFACE)
 target_include_directories({{project_name}} INTERFACE
-{{#each packages}}
-  ${ {{~this}}_INCLUDE_DIRS}
-{{/each}}
+{%- for pkg in packages %}
+  {%raw%}${{%endraw%}{{pkg}}_INCLUDE_DIRS}
+{%- endfor %}
 )
 target_link_libraries({{project_name}} INTERFACE rclcpp::rclcpp
-{{#each packages}}
-  ${ {{~this}}_LIBRARIES}
-{{/each}}
+{%- for pkg in packages %}
+  {%raw%}${{%endraw%}{{pkg}}_LIBRARIES}
+{%- endfor %}
 )
 set_target_properties({{project_name}} PROPERTIES PUBLIC_HEADER {{project_name}}.hpp)
 

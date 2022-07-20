@@ -82,9 +82,20 @@ pub struct TopicEndpoint {
 
 #[derive(Serialize, Deserialize)]
 #[cfg_attr(feature = "json_schema", derive(JsonSchema))]
+pub struct ServiceEndpoint {
+    pub title: String,
+    pub description: String,
+    pub service: String,
+    pub request_type: String,
+    pub response_type: String,
+}
+
+#[derive(Serialize, Deserialize)]
+#[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Endpoint {
     Topic(TopicEndpoint),
+    // Service(ServiceEndpoint),
 }
 
 #[derive(Serialize, Deserialize)]
