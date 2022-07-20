@@ -87,3 +87,23 @@ You can also generate the schema from source with
 ```bash
 cargo run -F json_schema --bin generate-schema
 ```
+
+### Code Completion (vscode)
+
+**TODO: These instructions are for when the repo is public, you need to download the schema and point to it locally for now.**
+
+1. Install the yaml extension https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml
+
+1. Edit your vscode settings to include this
+
+```json
+"yaml.schemas": {
+  "https://raw.githubusercontent.com/osrf/redf/main/redf.schema.json": "*.redf.yaml"
+}
+```
+
+3. Make sure your filename ends with `.redf.yaml`.
+
+You should now have code completion for redf
+
+![](./docs/code-completion.png)
