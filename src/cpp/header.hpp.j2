@@ -24,57 +24,54 @@ public:
     return topic;
   }
 
-  static inline rclcpp::QoS qos() {
-    {% if ep.qos is qos_default -%}
-    static const rclcpp::QoS qos{10};
-    {% elif ep.qos is qos_preset -%}
-    {% if ep.qos == "clock" -%}
-    static const rclcpp::QoS qos = rclcpp::ClockQoS{};
-    {% elif ep.qos == "parameter_events" -%}
-    static const rclcpp::QoS qos = rclcpp::ParameterEventsQoS{};
-    {% elif ep.qos == "parameters" -%}
-    static const rclcpp::QoS qos = rclcpp::ParametersQoS{};
-    {% elif ep.qos == "rosout" -%}
-    static const rclcpp::QoS qos = rclcpp::RosoutQoS{};
-    {% elif ep.qos == "sensor_data" -%}
-    static const rclcpp::QoS qos = rclcpp::SensorDataQoS{};
-    {% elif ep.qos == "services" -%}
-    static const rclcpp::QoS qos = rclcpp::ServicesQoS{};
-    {% elif ep.qos == "system_defaults" -%}
-    static const rclcpp::QoS qos = rclcpp::SystemDefaultsQoS{};
-    {% endif -%}
-    {% else -%}
-    static const rclcpp::QoS qos = []() {
-      rclcpp::QoS qos{10};
-      {% if ep.qos.reliability -%}
-      qos.reliability(rclcpp::ReliabilityPolicy::{{ ep.qos.reliability | pascal }});
-      {% else -%}
-      qos.reliability(rclcpp::ReliabilityPolicy::SystemDefault);
-      {% endif -%}
-      {% if ep.qos.durability -%}
-      qos.durability(rclcpp::DurabilityPolicy::{{ ep.qos.durability | pascal }});
-      {% else -%}
-      qos.durability(rclcpp::DurabilityPolicy::SystemDefault);
-      {% endif -%}
-      {% if ep.qos.liveliness -%}
-      qos.liveliness(rclcpp::LivelinessPolicy::{{ ep.qos.liveliness | pascal }});
-      {% else -%}
-      qos.liveliness(rclcpp::LivelinessPolicy::SystemDefault);
-      {% endif -%}
-      {% if ep.qos.deadline -%}
-      qos.deadline(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
-      {% endif -%}
-      {% if ep.qos.lifespan -%}
-      qos.lifespan(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
-      {% endif -%}
-      {% if ep.qos.lease_duration -%}
-      qos.liveliness_lease_duration(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
-      {% endif -%}
-      qos.avoid_ros_namespace_conventions({{ep.qos.avoid_ros_namespace_conventions}});
-      return qos;
-    }();
-    {% endif -%}
+  static inline rclcpp::QoS qos(size_t history_depth = 10) {
+    {%- if ep.qos is qos_default %}
+    return rclcpp::QoS{history_depth};
+    {%- elif ep.qos is qos_preset %}
+    {%- if ep.qos == "clock" %}
+    return rclcpp::ClockQoS{rclcpp::KeepLast{history_depth}};
+    {%- elif ep.qos == "parameter_events" %}
+    return rclcpp::ParameterEventsQoS{rclcpp::KeepLast{history_depth}};
+    {%- elif ep.qos == "parameters" %}
+    return rclcpp::ParametersQoS{rclcpp::KeepLast{history_depth}};
+    {%- elif ep.qos == "rosout" %}
+    return rclcpp::RosoutQoS{rclcpp::KeepLast{history_depth}};
+    {%- elif ep.qos == "sensor_data" %}
+    return rclcpp::SensorDataQoS{rclcpp::KeepLast{history_depth}};
+    {%- elif ep.qos == "services" %}
+    return rclcpp::ServicesQoS{rclcpp::KeepLast{history_depth}};
+    {%- elif ep.qos == "system_defaults" %}
+    return rclcpp::SystemDefaultsQoS{rclcpp::KeepLast{history_depth}};
+    {%- endif %}
+    {%- else %}
+    rclcpp::QoS qos{history_depth};
+    {%- if ep.qos.reliability %}
+    qos.reliability(rclcpp::ReliabilityPolicy::{{ ep.qos.reliability | pascal }});
+    {%- else %}
+    qos.reliability(rclcpp::ReliabilityPolicy::SystemDefault);
+    {%- endif %}
+    {%- if ep.qos.durability %}
+    qos.durability(rclcpp::DurabilityPolicy::{{ ep.qos.durability | pascal }});
+    {%- else %}
+    qos.durability(rclcpp::DurabilityPolicy::SystemDefault);
+    {%- endif %}
+    {%- if ep.qos.liveliness %}
+    qos.liveliness(rclcpp::LivelinessPolicy::{{ ep.qos.liveliness | pascal }});
+    {%- else %}
+    qos.liveliness(rclcpp::LivelinessPolicy::SystemDefault);
+    {%- endif %}
+    {%- if ep.qos.deadline %}
+    qos.deadline(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
+    {%- endif %}
+    {%- if ep.qos.lifespan %}
+    qos.lifespan(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
+    {%- endif %}
+    {%- if ep.qos.lease_duration %}
+    qos.liveliness_lease_duration(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
+    {%- endif %}
+    qos.avoid_ros_namespace_conventions({{ep.qos.avoid_ros_namespace_conventions}});
     return qos;
+    {%- endif %}
   }
 };
 
