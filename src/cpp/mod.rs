@@ -1,5 +1,6 @@
 use crate::helpers::register_helpers;
-use crate::redf::{Endpoint, Redf};
+use crate::redf::Redf;
+use crate::utils::get_ros_types;
 use convert_case::{Case, Casing};
 use serde::Serialize;
 use std::collections::BTreeSet;
@@ -12,7 +13,7 @@ struct Context<'a> {
     redf: &'a Redf,
     project_name: String,
     packages: Vec<String>,
-    messages: BTreeSet<String>,
+    ros_types: BTreeSet<String>,
     namespace: String,
     includes: Vec<String>,
 }
@@ -25,15 +26,8 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
     tera.add_raw_template("header.hpp", include_str!("header.hpp.j2"))?;
 
     let project_name = redf.title.to_case(Case::Snake).clone();
-    let messages: BTreeSet<String> = redf
-        .endpoints
-        .iter()
-        .map(|ep| match ep {
-            Endpoint::Topic(ep) => ep.message_type.clone(),
-            Endpoint::Service(ep) => ep.service_type.clone(),
-        })
-        .collect();
-    let packages: Vec<String> = messages
+    let ros_types: BTreeSet<String> = get_ros_types(&redf);
+    let packages: Vec<String> = ros_types
         .iter()
         .map(|msg| match msg.split_once("/") {
             Some((prefix, _)) => prefix.to_string(),
@@ -44,7 +38,7 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
         Some(ns) => ns.clone(),
         None => redf.title.to_case(Case::Snake),
     };
-    let includes: Vec<String> = messages
+    let includes: Vec<String> = ros_types
         .iter()
         .map(|msg| format!("#include \"{}.hpp\"", msg))
         .collect();
@@ -53,7 +47,7 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
         redf,
         project_name: project_name.clone(),
         packages,
-        messages,
+        ros_types,
         namespace,
         includes,
     })?;
