@@ -74,9 +74,3 @@ endpoints:
     message_type: std_msgs/msg/String
     description: An endpoint which uses the system defaults qos preset
     qos: system_defaults
-  # - title: Test Service
-  #   type: service
-  #   description: test service
-  #   service: test_service
-  #   request_type: std_msgs/msg/String
-  #   response_type: std_msgs/msg/String
