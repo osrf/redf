@@ -11,10 +11,9 @@
 A common problem of ROS is that it only contains message definitions, there is no definition of the topics available and their QoS settings expected. `redf` aims to solve this by defining the endpoints in a yaml file and generating code so that other packages will not have wrong topics and mismatched QoS.
 
 Currently `redf` can:
-* Generate a rclcpp based ROS package with the topics and QoS
+* Generate a rclcpp based ROS package with the topics, services, actions and their QoS
 
 Other planned features includes:
-* Support services and actions
 * Generate documentations
 * Generate a rclpy based package
 * Integrate with the rosidl codegen

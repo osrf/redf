@@ -111,6 +111,66 @@
               ]
             }
           }
+        },
+        {
+          "type": "object",
+          "required": [
+            "description",
+            "service_name",
+            "service_type",
+            "title",
+            "type"
+          ],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "service_name": {
+              "type": "string"
+            },
+            "service_type": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "service"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "action_name",
+            "action_type",
+            "description",
+            "title",
+            "type"
+          ],
+          "properties": {
+            "action_name": {
+              "type": "string"
+            },
+            "action_type": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "action"
+              ]
+            }
+          }
         }
       ]
     },
