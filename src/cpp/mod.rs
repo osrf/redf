@@ -30,6 +30,7 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
         .iter()
         .map(|ep| match ep {
             Endpoint::Topic(ep) => ep.message_type.clone(),
+            Endpoint::Service(ep) => ep.service_type.clone(),
         })
         .collect();
     let packages: Vec<String> = messages

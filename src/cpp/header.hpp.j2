@@ -5,7 +5,7 @@
 
 {% for msg in messages -%}
 #include <{{ msg | snake }}.hpp>
-{%- endfor %}
+{% endfor %}
 #include <rclcpp/qos.hpp>
 
 #include <string>
@@ -13,6 +13,7 @@
 namespace {{namespace}} {
 
 {% for ep in redf.endpoints -%}
+{% if ep.type == "topic" -%}
 /**
  * {{ep.description}}
  */
@@ -76,5 +77,18 @@ public:
   }
 };
 
-{% endfor -%}
+{% endif -%}
+{% if ep.type == "service" -%}
+class {{ep.title | pascal}} {
+public:
+  using ServiceType = {{ ep.service_type | replace(from="/", to="::") }};
+
+  static inline std::string service_name() {
+    static const std::string service = "{{ep.service_name}}";
+    return service;
+  }
+};
+{% endif -%}
+
+{% endfor %}
 }
