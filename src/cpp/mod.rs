@@ -12,7 +12,7 @@ use tera::Tera;
 struct Context<'a> {
     redf: &'a Redf,
     project_name: String,
-    packages: Vec<String>,
+    packages: BTreeSet<String>,
     ros_types: BTreeSet<String>,
     namespace: String,
     includes: Vec<String>,
@@ -27,7 +27,7 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
 
     let project_name = redf.title.to_case(Case::Snake).clone();
     let ros_types: BTreeSet<String> = get_ros_types(&redf);
-    let packages: Vec<String> = ros_types
+    let packages: BTreeSet<String> = ros_types
         .iter()
         .map(|msg| match msg.split_once("/") {
             Some((prefix, _)) => prefix.to_string(),

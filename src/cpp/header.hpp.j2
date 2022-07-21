@@ -3,8 +3,8 @@
 {# ROS2 style uses header guards, but we are using pragma once to avoid having to generating non-conflicting defines -#}
 #pragma once
 
-{% for msg in messages -%}
-#include <{{ msg | snake }}.hpp>
+{% for ros_type in ros_types -%}
+#include <{{ ros_type | snake }}.hpp>
 {% endfor %}
 #include <rclcpp/qos.hpp>
 
@@ -84,11 +84,24 @@ public:
   using ServiceType = {{ ep.service_type | replace(from="/", to="::") }};
 
   static inline std::string service_name() {
-    static const std::string service = "{{ep.service_name}}";
-    return service;
+    static const std::string name = "{{ep.service_name}}";
+    return name;
   }
 };
+
 {% endif -%}
 
-{% endfor %}
+{% if ep.type == "action" -%}
+class {{ep.title | pascal}} {
+public:
+  using ActionType = {{ ep.action_type | replace(from="/", to="::") }};
+
+  static inline std::string action_name() {
+    static const std::string name = "{{ep.action_name}}";
+    return name;
+  }
+};
+
+{% endif -%}
+{% endfor -%}
 }

@@ -8,6 +8,7 @@ pub fn get_ros_types(redf: &Redf) -> BTreeSet<String> {
         .map(|ep| match ep {
             Endpoint::Topic(ep) => ep.message_type.clone(),
             Endpoint::Service(ep) => ep.service_type.clone(),
+            Endpoint::Action(ep) => ep.action_type.clone(),
         })
         .collect()
 }

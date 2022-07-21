@@ -1,3 +1,5 @@
+use std::path::Path;
+
 fn assert_command_success(result: std::process::Output) {
     if !result.status.success() {
         eprintln!("{}", String::from_utf8(result.stderr).unwrap());
@@ -8,16 +10,26 @@ fn assert_command_success(result: std::process::Output) {
 #[test]
 fn cpp() -> Result<(), Box<dyn std::error::Error>> {
     let target = env!("CARGO_BIN_EXE_redf");
-    let outdir = format!("{}/cpp/redf", env!("CARGO_TARGET_TMPDIR"));
-    let srcdir = format!("{}/cpp/src", env!("CARGO_TARGET_TMPDIR"));
+    let testdir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("cpp");
+    let outdir = testdir.join("redf");
+    let srcdir = testdir.join("src");
+
+    if testdir.exists() {
+        std::fs::remove_dir_all(testdir)?;
+    }
 
     let result = std::process::Command::new(target)
-        .args(["--out", &outdir, "--gen=cpp", "tests/test_api.redf.yaml"])
+        .args([
+            "--out",
+            outdir.to_str().unwrap(),
+            "--gen=cpp",
+            "tests/test_api.redf.yaml",
+        ])
         .output()?;
     assert_command_success(result);
 
     let result = std::process::Command::new("cp")
-        .args(["-r", "tests/cpp", &srcdir])
+        .args(["-r", "tests/cpp", srcdir.to_str().unwrap()])
         .output()?;
     assert_command_success(result);
 
@@ -30,7 +42,10 @@ fn cpp() -> Result<(), Box<dyn std::error::Error>> {
     let result = std::process::Command::new("bash")
         .args([
             "-c",
-            &format!(". '{}/install/setup.bash' && colcon build", &outdir),
+            &format!(
+                ". '{}/install/setup.bash' && colcon build",
+                outdir.to_str().unwrap()
+            ),
         ])
         .current_dir(&srcdir)
         .output()?;
