@@ -8,7 +8,7 @@
   <license>Apache License 2.0</license>
 
   <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
+  <depend>test_api</depend>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
