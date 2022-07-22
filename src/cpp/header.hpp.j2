@@ -59,54 +59,54 @@ public:
     {%- else -%}
     rclcpp::QoS qos{history_depth};
 
-    {%- if distro == "foxy" -%}
-    {%- if ep.qos.reliability -%}
+    {%- if distro == "foxy" %}
+    {%- if ep.qos.reliability %}
     qos.reliability(RMW_QOS_POLICY_RELIABILITY_{{ ep.qos.reliability | screaming_snake }});
-    {%- else -%}
+    {%- else %}
     qos.reliability(RMW_QOS_POLICY_RELIABILITY_SYSTEM_DEFAULT);
-    {%- endif -%}
-    {%- if ep.qos.durability -%}
+    {%- endif %}
+    {%- if ep.qos.durability %}
     qos.durability(RMW_QOS_POLICY_DURABILITY_{{ ep.qos.durability | screaming_snake }});
-    {%- else -%}
+    {%- else %}
     qos.durability(RMW_QOS_POLICY_DURABILITY_SYSTEM_DEFAULT);
-    {%- endif -%}
-    {%- if ep.qos.liveliness -%}
+    {%- endif %}
+    {%- if ep.qos.liveliness %}
     qos.liveliness(RMW_QOS_POLICY_LIVELINESS_{{ ep.qos.liveliness | screaming_snake }});
-    {%- else -%}
+    {%- else %}
     qos.liveliness(RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT);
-    {%- endif -%}
-    {%- else -%}
-    {%- if ep.qos.reliability -%}
+    {%- endif %}
+    {%- else %}
+    {%- if ep.qos.reliability %}
     qos.reliability(rclcpp::ReliabilityPolicy::{{ ep.qos.reliability | pascal }});
-    {%- else -%}
+    {%- else %}
     qos.reliability(rclcpp::ReliabilityPolicy::SystemDefault);
-    {%- endif -%}
-    {%- if ep.qos.durability -%}
+    {%- endif %}
+    {%- if ep.qos.durability %}
     qos.durability(rclcpp::DurabilityPolicy::{{ ep.qos.durability | pascal }});
-    {%- else -%}
+    {%- else %}
     qos.durability(rclcpp::DurabilityPolicy::SystemDefault);
-    {%- endif -%}
-    {%- if ep.qos.liveliness -%}
+    {%- endif %}
+    {%- if ep.qos.liveliness %}
     qos.liveliness(rclcpp::LivelinessPolicy::{{ ep.qos.liveliness | pascal }});
-    {%- else -%}
+    {%- else %}
     qos.liveliness(rclcpp::LivelinessPolicy::SystemDefault);
-    {%- endif -%}
+    {%- endif %}
     {%- endif -%}
 
-    {%- if ep.qos.deadline -%}
+    {%- if ep.qos.deadline %}
     qos.deadline(rclcpp::Duration{%- raw -%}{{%- endraw -%}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{%- raw -%}}{%- endraw -%});
     {%- endif -%}
-    {%- if ep.qos.lifespan -%}
+    {%- if ep.qos.lifespan %}
     qos.lifespan(rclcpp::Duration{%- raw -%}{{%- endraw -%}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{%- raw -%}}{%- endraw -%});
     {%- endif -%}
-    {%- if ep.qos.lease_duration -%}
+    {%- if ep.qos.lease_duration %}
     qos.liveliness_lease_duration(rclcpp::Duration{%- raw -%}{{%- endraw -%}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{%- raw -%}}{%- endraw -%});
     {%- endif -%}
-    {%- if ep.qos.avoid_ros_namespace_conventions -%}
+    {%- if ep.qos.avoid_ros_namespace_conventions %}
     qos.avoid_ros_namespace_conventions(true);
-    {%- else -%}
+    {%- else %}
     qos.avoid_ros_namespace_conventions(false);
-    {%- endif -%}
+    {%- endif %}
     return qos;
     {%- endif %}
   }
