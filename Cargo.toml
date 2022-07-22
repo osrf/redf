@@ -19,4 +19,4 @@ serde_yaml = "0.8.23"
 tera = "1.16.0"
 
 [features]
-json_schema = ["dep:schemars"]
+json_schema = ["schemars"]
