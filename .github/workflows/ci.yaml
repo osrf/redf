@@ -2,16 +2,25 @@ on:
   pull_request:
   push:
     branches: [ main ]
+defaults:
+  run:
+    shell: bash
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        docker_image: [ros:humble-ros-core]
+        docker_image: ['ros:humble-ros-base']
     container:
       image: ${{ matrix.docker_image }}
     steps:
     - uses: actions/checkout@v2
+    - name: Install rustup dependencies
+      run: |
+        apt update
+        apt install -y curl
     - uses: actions-rs/toolchain@v1
-    - name: test
-      run: cargo test
+      with:
+        toolchain: stable
+    - name: cargo test
+      run: . /ros_entrypoint.sh && cargo test
