@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        docker_image: ['ros:humble-ros-base']
+        docker_image: ['ros:foxy-ros-base', 'ros:galactic-ros-base', 'ros:humble-ros-base']
     container:
       image: ${{ matrix.docker_image }}
     steps:
