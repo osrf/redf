@@ -110,3 +110,25 @@ cargo run -F json_schema --bin generate-schema
 You should now have code completion for redf
 
 ![](./docs/code-completion.png)
+
+### Running Tests
+
+Requirements:
+* supported ros distro
+* rosdeps
+  * ament_cmake
+  * std_msgs
+  * example_interfaces
+  * rclcpp
+
+Use `rosdep` to resolve and install the dependencies
+
+```bash
+rosdep resolve -q ament_cmake std_msgs example_interfaces rclcpp | sed '/^#/d' | xargs sudo apt install
+```
+
+Source ROS and run the tests
+
+```bash
+. /opt/ros/{DISTRO}/setup.bash && cargo test
+```
