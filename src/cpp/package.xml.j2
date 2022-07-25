@@ -4,15 +4,15 @@
   <name>{{project_name}}</name>
   <version>{{redf.version}}</version>
   <description>{{redf.description}}</description>
-  {{#each redf.maintainers}}
-  <maintainer email="{{email}}">{{name}}</maintainer>
-  {{/each}}
+  {%- for maintainer in redf.maintainers %}
+  <maintainer email="{{maintainer.email}}">{{maintainer.name}}</maintainer>
+  {%- endfor %}
   <license>{{redf.license}}</license>
 
   <depend>rclcpp</depend>
-  {{#each packages}}
-  <depend>{{this}}</depend>
-  {{/each}}
+  {%- for pkg in packages %}
+  <depend>{{pkg}}</depend>
+  {%- endfor %}
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
