@@ -23,5 +23,7 @@ jobs:
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
+    - name: rosdep
+      run: rosdep resolve -q ament_cmake std_msgs example_interfaces rclcpp | sed '/^#/d' | xargs apt install
     - name: cargo test
       run: . /ros_entrypoint.sh && cargo test
