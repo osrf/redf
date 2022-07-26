@@ -50,7 +50,7 @@ This will generate a full, ready-to-use ROS package, it can be included into a c
 
 An example of using the endpoint definitions:
 
-cmake:
+CMakeLists.txt:
 ```cmake
 cmake_minimum_required(VERSION 3.16)
 project(test_node)
@@ -61,6 +61,8 @@ find_package(test_api REQUIRED)
 add_executable(test_node main.cpp)
 target_link_libraries(test_node rclcpp::rclcpp test_api::test_api)
 ```
+
+* `test_api` automatically brings in the required messages.
 
 main.cpp:
 ```cpp
@@ -80,6 +82,35 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 ```
+
+* `MessageType` is a alias to the message type used for the topic (in this case, it is `std_msgs/msg/String`).
+* `topic_name()` returns a `std::string` with the topic name of the endpoint.
+* `qos()` returns the `rclcpp::QoS` of the endpoint.
+
+Example for service clients:
+
+```cpp
+#include <test_api.hpp>
+#include <rclcpp/rclcpp.hpp>
+
+int main(int argc, char* argv[]) {
+  rclcpp::init(argc, argv);
+  auto test_node = rclcpp::Node::make_shared("test_node");
+
+  using test_namespace::test_api::TestService;
+  auto client = test_node->create_client<TestService::ServiceType>(TestService::service_name());
+  auto req = std::make_shared<TestService::ServiceType::Request>();
+  client->async_send_request(req);
+
+  return 0;
+}
+```
+
+* `ServiceType` is a alias to the message type used for the topic (in this case, it is `example_interfaces/srv/AddTwoInts`).
+* `service_name()` returns a `std::string` with the service name of the endpoint.
+* The default service qos will be used.
+
+For more examples, see https://github.com/ros2/examples, usages with `redf` is the same, just replace the message types, strings and qos with those from the generated library.
 
 ### Redf Format
 
