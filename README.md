@@ -151,11 +151,12 @@ Requirements:
   * std_msgs
   * example_interfaces
   * rclcpp
+  * rclcpp_action
 
 Use `rosdep` to resolve and install the dependencies
 
 ```bash
-rosdep resolve -q ament_cmake std_msgs example_interfaces rclcpp | sed '/^#/d' | xargs sudo apt install
+rosdep resolve -q ament_cmake std_msgs example_interfaces rclcpp rclcpp_action | sed '/^#/d' | xargs sudo apt install
 ```
 
 Source ROS and run the tests
