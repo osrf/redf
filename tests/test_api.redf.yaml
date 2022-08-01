@@ -74,3 +74,13 @@ endpoints:
     message_type: std_msgs/msg/String
     description: An endpoint which uses the system defaults qos preset
     qos: system_defaults
+  - title: Test Service
+    type: service
+    description: test service
+    service_name: test_service
+    service_type: example_interfaces/srv/AddTwoInts
+  - title: Test Action
+    type: action
+    description: test action
+    action_name: test_action
+    action_type: example_interfaces/action/Fibonacci
