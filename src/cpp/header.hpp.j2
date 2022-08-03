@@ -21,8 +21,8 @@ class {{ep.title | pascal}} {
 public:
   using MessageType = {{ ep.message_type | replace(from="/", to="::") }};
 
-  static inline std::string topic_name() {
-    static const std::string topic = "{{ep.topic}}";
+  static inline std::string topic_name({% for part in varsub(str=ep.topic, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
+    const std::string topic = {% for part in varsub(str=ep.topic) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
     return topic;
   }
 
@@ -83,8 +83,8 @@ class {{ep.title | pascal}} {
 public:
   using ServiceType = {{ ep.service_type | replace(from="/", to="::") }};
 
-  static inline std::string service_name() {
-    static const std::string name = "{{ep.service_name}}";
+  static inline std::string service_name({% for part in varsub(str=ep.service_name, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
+    const std::string name = {% for part in varsub(str=ep.service_name) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
     return name;
   }
 };
@@ -96,8 +96,8 @@ class {{ep.title | pascal}} {
 public:
   using ActionType = {{ ep.action_type | replace(from="/", to="::") }};
 
-  static inline std::string action_name() {
-    static const std::string name = "{{ep.action_name}}";
+  static inline std::string action_name({% for part in varsub(str=ep.action_name, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
+    const std::string name = {% for part in varsub(str=ep.action_name) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
     return name;
   }
 };

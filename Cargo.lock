@@ -566,6 +566,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "convert_case",
+ "regex",
  "schemars",
  "serde",
  "serde_json",
