@@ -122,6 +122,29 @@ You can also generate the schema from source with
 cargo run -F json_schema --bin generate-schema
 ```
 
+#### Namespaced Topics
+
+Sometimes a system may use namespaced topics to separate the channels between similar nodes. For example, a camera array may publish their images to `/camera_0/image_raw`, `/camera_1/image_raw`... etc. This can be represented with redf via variable subsitution.
+
+```yaml
+  - title: Camera Images
+    type: topic
+    description: Raw camera images
+    topic: '/{camera_id}/image_raw'
+    message_type: sensor_msgs/msg/Image
+```
+
+When redf generates code for this endpoint, it will have an argument in the `topic_name` function, e.g.
+
+```cpp
+static inline std::string topic_name(const std::string& camera_id) {
+  const std::string topic = "/" + camera_id + "/image_raw";
+  return topic;
+}
+```
+
+This also works for service and action names.
+
 ### Code Completion (vscode)
 
 **TODO: These instructions are for when the repo is public, you need to download the schema and point to it locally for now.**

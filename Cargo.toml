@@ -12,6 +12,7 @@ required-features = ["json_schema"]
 [dependencies]
 clap = { version = "3.2.12", features = ["derive"] }
 convert_case = "0.5.0"
+regex = "1.6.0"
 schemars = { version = "0.8.10", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.82"

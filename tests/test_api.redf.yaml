@@ -84,3 +84,8 @@ endpoints:
     description: test action
     action_name: test_action
     action_type: example_interfaces/action/Fibonacci
+  - title: Namespaced Topic
+    type: topic
+    description: namespaced topic
+    topic: '/{test_namespace}/namespaced_topic'
+    message_type: std_msgs/msg/String
