@@ -12,6 +12,14 @@ impl Filter for Snake {
     }
 }
 
+struct ScreamingSnake;
+
+impl Filter for ScreamingSnake {
+    fn filter(&self, value: &Value, _: &HashMap<String, Value>) -> Result<Value> {
+        Ok(Value::String(value.as_str().unwrap().to_case(Case::ScreamingSnake)))
+    }
+}
+
 struct Pascal;
 
 impl Filter for Pascal {
@@ -119,6 +127,7 @@ impl Function for VarSub {
 
 pub fn register_helpers(tera: &mut Tera) -> () {
     tera.register_filter("snake", Snake);
+    tera.register_filter("screaming_snake", ScreamingSnake);
     tera.register_filter("pascal", Pascal);
     tera.register_tester("qos_preset", IsQosPreset);
     tera.register_tester("qos_profile", IsQosProfile);

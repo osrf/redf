@@ -9,6 +9,9 @@
 #include <rclcpp/qos.hpp>
 
 #include <string>
+{% if distro == "foxy" -%}
+#include <stdexcept>
+{%- endif %}
 
 namespace {{namespace}} {
 
@@ -27,26 +30,52 @@ public:
   }
 
   static inline rclcpp::QoS qos(size_t history_depth = 10) {
-    {%- if ep.qos is qos_default %}
+    {% if ep.qos is qos_default -%}
     return rclcpp::QoS{history_depth};
-    {%- elif ep.qos is qos_preset %}
-    {%- if ep.qos == "clock" %}
+    {%- elif ep.qos is qos_preset -%}
+    {%- if ep.qos == "clock" -%}
+    {%- if distro == "foxy" -%}
+    throw std::runtime_error{"Clock QoS is not supported on foxy"};
+    {%- else -%}
     return rclcpp::ClockQoS{rclcpp::KeepLast{history_depth}};
-    {%- elif ep.qos == "parameter_events" %}
+    {%- endif -%}
+    {%- elif ep.qos == "parameter_events" -%}
     return rclcpp::ParameterEventsQoS{rclcpp::KeepLast{history_depth}};
-    {%- elif ep.qos == "parameters" %}
+    {%- elif ep.qos == "parameters" -%}
     return rclcpp::ParametersQoS{rclcpp::KeepLast{history_depth}};
-    {%- elif ep.qos == "rosout" %}
+    {%- elif ep.qos == "rosout" -%}
+    {%- if distro == "foxy" -%}
+    throw std::runtime_error("Rosout QoS is not supported on foxy");
+    {%- else -%}
     return rclcpp::RosoutQoS{rclcpp::KeepLast{history_depth}};
-    {%- elif ep.qos == "sensor_data" %}
+    {%- endif -%}
+    {%- elif ep.qos == "sensor_data" -%}
     return rclcpp::SensorDataQoS{rclcpp::KeepLast{history_depth}};
-    {%- elif ep.qos == "services" %}
+    {%- elif ep.qos == "services" -%}
     return rclcpp::ServicesQoS{rclcpp::KeepLast{history_depth}};
-    {%- elif ep.qos == "system_defaults" %}
+    {%- elif ep.qos == "system_defaults" -%}
     return rclcpp::SystemDefaultsQoS{rclcpp::KeepLast{history_depth}};
+    {%- endif -%}
+    {%- else -%}
+    rclcpp::QoS qos{history_depth};
+
+    {%- if distro == "foxy" %}
+    {%- if ep.qos.reliability %}
+    qos.reliability(RMW_QOS_POLICY_RELIABILITY_{{ ep.qos.reliability | screaming_snake }});
+    {%- else %}
+    qos.reliability(RMW_QOS_POLICY_RELIABILITY_SYSTEM_DEFAULT);
+    {%- endif %}
+    {%- if ep.qos.durability %}
+    qos.durability(RMW_QOS_POLICY_DURABILITY_{{ ep.qos.durability | screaming_snake }});
+    {%- else %}
+    qos.durability(RMW_QOS_POLICY_DURABILITY_SYSTEM_DEFAULT);
+    {%- endif %}
+    {%- if ep.qos.liveliness %}
+    qos.liveliness(RMW_QOS_POLICY_LIVELINESS_{{ ep.qos.liveliness | screaming_snake }});
+    {%- else %}
+    qos.liveliness(RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT);
     {%- endif %}
     {%- else %}
-    rclcpp::QoS qos{history_depth};
     {%- if ep.qos.reliability %}
     qos.reliability(rclcpp::ReliabilityPolicy::{{ ep.qos.reliability | pascal }});
     {%- else %}
@@ -62,16 +91,22 @@ public:
     {%- else %}
     qos.liveliness(rclcpp::LivelinessPolicy::SystemDefault);
     {%- endif %}
+    {%- endif -%}
+
     {%- if ep.qos.deadline %}
-    qos.deadline(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
-    {%- endif %}
+    qos.deadline(rclcpp::Duration{%- raw -%}{{%- endraw -%}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{%- raw -%}}{%- endraw -%});
+    {%- endif -%}
     {%- if ep.qos.lifespan %}
-    qos.lifespan(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
-    {%- endif %}
+    qos.lifespan(rclcpp::Duration{%- raw -%}{{%- endraw -%}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{%- raw -%}}{%- endraw -%});
+    {%- endif -%}
     {%- if ep.qos.lease_duration %}
-    qos.liveliness_lease_duration(rclcpp::Duration{% raw %}{{% endraw %}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{% raw %}}{% endraw %});
+    qos.liveliness_lease_duration(rclcpp::Duration{%- raw -%}{{%- endraw -%}{{ep.qos.deadline.secs}}, {{ep.qos.deadline.nanosecs}}{%- raw -%}}{%- endraw -%});
+    {%- endif -%}
+    {%- if ep.qos.avoid_ros_namespace_conventions %}
+    qos.avoid_ros_namespace_conventions(true);
+    {%- else %}
+    qos.avoid_ros_namespace_conventions(false);
     {%- endif %}
-    qos.avoid_ros_namespace_conventions({{ep.qos.avoid_ros_namespace_conventions}});
     return qos;
     {%- endif %}
   }

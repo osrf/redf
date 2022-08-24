@@ -11,6 +11,7 @@ use tera::Tera;
 #[derive(Serialize)]
 struct Context<'a> {
     redf: &'a Redf,
+    distro: String,
     project_name: String,
     packages: BTreeSet<String>,
     ros_types: BTreeSet<String>,
@@ -45,6 +46,7 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
 
     let ctx = tera::Context::from_serialize(Context {
         redf,
+        distro: env!("ROS_DISTRO").to_string(),
         project_name: project_name.clone(),
         packages,
         ros_types,
