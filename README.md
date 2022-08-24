@@ -147,8 +147,6 @@ This also works for service and action names.
 
 ### Code Completion (vscode)
 
-**TODO: These instructions are for when the repo is public, you need to download the schema and point to it locally for now.**
-
 1. Install the yaml extension https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml
 
 1. Edit your vscode settings to include this
