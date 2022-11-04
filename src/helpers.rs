@@ -16,7 +16,9 @@ struct ScreamingSnake;
 
 impl Filter for ScreamingSnake {
     fn filter(&self, value: &Value, _: &HashMap<String, Value>) -> Result<Value> {
-        Ok(Value::String(value.as_str().unwrap().to_case(Case::ScreamingSnake)))
+        Ok(Value::String(
+            value.as_str().unwrap().to_case(Case::ScreamingSnake),
+        ))
     }
 }
 

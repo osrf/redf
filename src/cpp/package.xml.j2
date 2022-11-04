@@ -10,6 +10,9 @@
   <license>{{redf.license}}</license>
 
   <depend>rclcpp</depend>
+  {%- if have_actions %}
+  <depend>rclcpp_action</depend>
+  {%- endif -%}
   {%- for pkg in packages %}
   <depend>{{pkg}}</depend>
   {%- endfor %}

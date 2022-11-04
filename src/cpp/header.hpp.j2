@@ -6,7 +6,10 @@
 {% for ros_type in ros_types -%}
 #include <{{ ros_type | snake }}.hpp>
 {% endfor %}
-#include <rclcpp/qos.hpp>
+#include <rclcpp/rclcpp.hpp>
+{% if have_actions -%}
+#include <rclcpp_action/rclcpp_action.hpp>
+{%- endif %}
 
 #include <string>
 {% if distro == "foxy" -%}
@@ -18,6 +21,7 @@ namespace {{namespace}} {
 {% for ep in redf.endpoints -%}
 {%- set class_name = ep.title | pascal -%}
 {% if ep.type == "topic" -%}
+{%- set topic_name_vars = varsub(str=ep.topic_name, vars_only=True) -%}
 /**
 {%- for line in split_lines(input=ep.description) %}
  * {{line}}
@@ -27,7 +31,7 @@ class {{class_name}} {
 public:
   using MessageType = {{ ep.message_type | replace(from="/", to="::") }};
 
-  static inline std::string topic_name({% for part in varsub(str=ep.topic_name, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
+  static inline std::string topic_name({% for part in topic_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}) {
     const std::string topic = {% for part in varsub(str=ep.topic_name) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
     return topic;
   }
@@ -113,30 +117,62 @@ public:
     return qos;
     {%- endif %}
   }
+
+  template<typename NodePtrT>
+  static rclcpp::Publisher<{{class_name}}::MessageType>::SharedPtr create_publisher(NodePtrT node{% if topic_name_vars %}, {% for part in topic_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}, size_t history_depth = 10) {
+    return node->template create_publisher<{{class_name}}::MessageType>({{class_name}}::topic_name({% for part in topic_name_vars %}{{part.var}}{% if not loop.last %}, {% endif %}{% endfor %}), {{class_name}}::qos(history_depth));
+  }
+
+  template<typename NodePtrT, typename CallbackT>
+  static rclcpp::Subscription<{{class_name}}::MessageType>::SharedPtr create_subscription(NodePtrT node{% if topic_name_vars %}, {% for part in topic_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}, CallbackT&& callback, size_t history_depth = 10) {
+    return node->template create_subscription<{{class_name}}::MessageType>({{class_name}}::topic_name({% for part in topic_name_vars %}{{part.var}}{% if not loop.last %}, {% endif %}{% endfor %}), {{class_name}}::qos(history_depth), std::forward<CallbackT>(callback));
+  }
 };
 
 {% endif -%}
 {% if ep.type == "service" -%}
-class {{ep.title | pascal}} {
+{%- set service_name_vars = varsub(str=ep.service_name, vars_only=True) -%}
+class {{class_name}} {
 public:
   using ServiceType = {{ ep.service_type | replace(from="/", to="::") }};
 
-  static inline std::string service_name({% for part in varsub(str=ep.service_name, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
+  static inline std::string service_name({% for part in service_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}) {
     const std::string name = {% for part in varsub(str=ep.service_name) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
     return name;
+  }
+
+  template<typename NodePtrT, typename CallbackT>
+  static rclcpp::Service<{{class_name}}::ServiceType>::SharedPtr create_service(NodePtrT node{% if service_name_vars %}, {% for part in service_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}, CallbackT&& callback) {
+    return node->template create_service<{{class_name}}::ServiceType>({{class_name}}::service_name({% for part in service_name_vars %}{{part.var}}{% if not loop.last %},{% endif %}{% endfor %}), std::forward<CallbackT>(callback));
+  }
+
+  template<typename NodePtrT>
+  static rclcpp::Client<{{class_name}}::ServiceType>::SharedPtr create_client(NodePtrT node{% if service_name_vars %}, {% for part in service_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}) {
+    return node->template create_client<{{class_name}}::ServiceType>({{class_name}}::service_name({% for part in service_name_vars %}{{part.var}}{% if not loop.last %},{% endif %}{% endfor %}));
   }
 };
 
 {% endif -%}
 
 {% if ep.type == "action" -%}
-class {{ep.title | pascal}} {
+{%- set action_name_vars = varsub(str=ep.action_name, vars_only=True) -%}
+class {{class_name}} {
 public:
   using ActionType = {{ ep.action_type | replace(from="/", to="::") }};
 
-  static inline std::string action_name({% for part in varsub(str=ep.action_name, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
+  static inline std::string action_name({% for part in action_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}) {
     const std::string name = {% for part in varsub(str=ep.action_name) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
     return name;
+  }
+
+  template<typename NodePtrT>
+  static rclcpp_action::Server<{{class_name}}::ActionType>::SharedPtr create_server(NodePtrT node{% if action_name_vars %}, {% for part in action_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}, typename rclcpp_action::Server<{{class_name}}::ActionType>::GoalCallback handle_goal, typename rclcpp_action::Server<{{class_name}}::ActionType>::CancelCallback handle_cancel, typename rclcpp_action::Server<{{class_name}}::ActionType>::AcceptedCallback handle_accepted) {
+    return rclcpp_action::create_server<{{class_name}}::ActionType>(node, {{class_name}}::action_name({% for part in action_name_vars %}{% if part.var %}{{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}), handle_goal, handle_cancel, handle_accepted);
+  }
+
+  template<typename NodePtrT>
+  static rclcpp_action::Client<{{class_name}}::ActionType>::SharedPtr create_client(NodePtrT node{% if action_name_vars %}, {% for part in action_name_vars %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}) {
+    return rclcpp_action::create_client<{{class_name}}::ActionType>(node, {{class_name}}::action_name({% for part in action_name_vars %}{% if part.var %}{{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}));
   }
 };
 

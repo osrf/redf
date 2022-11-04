@@ -1,5 +1,5 @@
 use crate::helpers::register_helpers;
-use crate::redf::Redf;
+use crate::redf::{Endpoint, Redf};
 use crate::utils::get_ros_types;
 use convert_case::{Case, Casing};
 use serde::Serialize;
@@ -17,6 +17,7 @@ struct Context<'a> {
     ros_types: BTreeSet<String>,
     namespace: String,
     includes: Vec<String>,
+    have_actions: bool,
 }
 
 pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
@@ -44,6 +45,11 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
         .map(|msg| format!("#include \"{}.hpp\"", msg))
         .collect();
 
+    let have_actions = redf.endpoints.iter().any(|i| match i {
+        Endpoint::Action(_) => true,
+        _ => false,
+    });
+
     let ctx = tera::Context::from_serialize(Context {
         redf,
         distro: env!("ROS_DISTRO").to_string(),
@@ -52,6 +58,7 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
         ros_types,
         namespace,
         includes,
+        have_actions,
     })?;
 
     let f = std::fs::File::create(outdir.join("package.xml"))?;
