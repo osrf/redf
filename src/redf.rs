@@ -74,7 +74,7 @@ pub enum Qos {
 #[cfg_attr(feature = "json_schema", derive(JsonSchema))]
 pub struct TopicEndpoint {
     pub title: String,
-    pub topic: String,
+    pub topic_name: String,
     pub message_type: String,
     pub description: String,
     pub qos: Option<Qos>,

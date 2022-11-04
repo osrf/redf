@@ -9,7 +9,7 @@ cpp_namespace: test_namespace::test_api
 endpoints:
   - title: Full QoS
     type: topic
-    topic: full_qos
+    topic_name: full_qos
     message_type: std_msgs/msg/String
     description: An endpoint which specifies all qos settings
     qos:
@@ -22,55 +22,55 @@ endpoints:
       avoid_ros_namespace_conventions: false
   - title: Simple QoS
     type: topic
-    topic: simple_qos
+    topic_name: simple_qos
     message_type: std_msgs/msg/String
     description: An endpoint which only specify a minimal set of qos
     qos:
       durability: transient_local
   - title: No QoS
     type: topic
-    topic: no_qos
+    topic_name: no_qos
     message_type: std_msgs/msg/String
     description: An endpoint that does not specify any qos settings
   - title: Clock Preset QoS
     type: topic
-    topic: clock_preset_qos
+    topic_name: clock_preset_qos
     message_type: std_msgs/msg/String
     description: An endpoint which uses the clock qos preset
     qos: clock
   - title: ParameterEvents Preset QoS
     type: topic
-    topic: parameter_events_preset_qos
+    topic_name: parameter_events_preset_qos
     message_type: std_msgs/msg/String
     description: An endpoint which uses the paramter events qos preset
     qos: parameter_events
   - title: Parameters Preset QoS
     type: topic
-    topic: parameters_preset_qos
+    topic_name: parameters_preset_qos
     message_type: std_msgs/msg/String
     description: An endpoint which uses the parameters qos preset
     qos: parameters
   - title: Rosout Preset QoS
     type: topic
-    topic: rosout_preset_qos
+    topic_name: rosout_preset_qos
     message_type: std_msgs/msg/String
     description: An endpoint which uses the rosout qos preset
     qos: rosout
   - title: SensorData Preset QoS
     type: topic
-    topic: sensor_data_preset_qos
+    topic_name: sensor_data_preset_qos
     message_type: std_msgs/msg/String
     description: An endpoint which uses the sensor data qos preset
     qos: sensor_data
   - title: Services Preset QoS
     type: topic
-    topic: services_preset_qos
+    topic_name: services_preset_qos
     message_type: std_msgs/msg/String
     description: An endpoint which uses the services qos preset
     qos: services
   - title: SystemDefaults Preset QoS
     type: topic
-    topic: system_defaults_preset_qos
+    topic_name: system_defaults_preset_qos
     message_type: std_msgs/msg/String
     description: An endpoint which uses the system defaults qos preset
     qos: system_defaults
@@ -90,5 +90,5 @@ endpoints:
       namespaced topic
 
       multiline test
-    topic: '/{test_namespace}/namespaced_topic'
+    topic_name: '/{test_namespace}/namespaced_topic'
     message_type: std_msgs/msg/String
