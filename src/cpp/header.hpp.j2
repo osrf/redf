@@ -16,18 +16,19 @@
 namespace {{namespace}} {
 
 {% for ep in redf.endpoints -%}
+{%- set class_name = ep.title | pascal -%}
 {% if ep.type == "topic" -%}
 /**
 {%- for line in split_lines(input=ep.description) %}
  * {{line}}
 {%- endfor %}
  */
-class {{ep.title | pascal}} {
+class {{class_name}} {
 public:
   using MessageType = {{ ep.message_type | replace(from="/", to="::") }};
 
-  static inline std::string topic_name({% for part in varsub(str=ep.topic, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
-    const std::string topic = {% for part in varsub(str=ep.topic) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
+  static inline std::string topic_name({% for part in varsub(str=ep.topic_name, vars_only=True) %}{% if part.var %}const std::string& {{part.var}}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}) {
+    const std::string topic = {% for part in varsub(str=ep.topic_name) %}{% if part.var %}{{part.var}}{% else %}"{{part.raw}}"{% endif %}{% if not loop.last %} + {% endif %}{% endfor %};
     return topic;
   }
 
