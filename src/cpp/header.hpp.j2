@@ -18,7 +18,9 @@ namespace {{namespace}} {
 {% for ep in redf.endpoints -%}
 {% if ep.type == "topic" -%}
 /**
- * {{ep.description}}
+{%- for line in split_lines(input=ep.description) %}
+ * {{line}}
+{%- endfor %}
  */
 class {{ep.title | pascal}} {
 public:

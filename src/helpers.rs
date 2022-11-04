@@ -125,6 +125,16 @@ impl Function for VarSub {
     }
 }
 
+struct SplitLines;
+
+impl Function for SplitLines {
+    fn call(&self, args: &HashMap<String, Value>) -> Result<Value> {
+        let input = args.get("input").unwrap().as_str().unwrap();
+        let result = input.split("\n").collect();
+        Ok(result)
+    }
+}
+
 pub fn register_helpers(tera: &mut Tera) -> () {
     tera.register_filter("snake", Snake);
     tera.register_filter("screaming_snake", ScreamingSnake);
@@ -133,4 +143,5 @@ pub fn register_helpers(tera: &mut Tera) -> () {
     tera.register_tester("qos_profile", IsQosProfile);
     tera.register_tester("qos_default", IsQosDefault);
     tera.register_function("varsub", VarSub);
+    tera.register_function("split_lines", SplitLines);
 }
