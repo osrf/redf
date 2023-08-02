@@ -34,6 +34,9 @@ install(
 )
 ament_export_targets({{project_name}})
 ament_export_dependencies(
+  {% if have_actions -%}
+  rclcpp_action
+  {%- endif %}
   {%- for pkg in packages %}
   {{pkg}}
   {%- endfor %}
