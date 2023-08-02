@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.16)
 project({{project_name}})
 
 find_package(rclcpp REQUIRED)
+{% if have_actions -%}
+find_package(rclcpp_action REQUIRED)
+{%- endif %}
 find_package(ament_cmake REQUIRED)
 {%- for pkg in packages %}
 find_package({{pkg}} REQUIRED)
@@ -15,7 +18,7 @@ target_include_directories({{project_name}} INTERFACE
   {%raw%}${{%endraw%}{{pkg}}_INCLUDE_DIRS}
 {%- endfor %}
 )
-target_link_libraries({{project_name}} INTERFACE rclcpp::rclcpp
+target_link_libraries({{project_name}} INTERFACE rclcpp::rclcpp {% if have_actions -%} rclcpp_action::rclcpp_action {%- endif %}
 {%- for pkg in packages %}
   {%raw%}${{%endraw%}{{pkg}}_LIBRARIES}
 {%- endfor %}
