@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        docker_image: ['ros:humble-ros-base', 'ros:galactic-ros-base', 'ros:foxy-ros-base']
+        docker_image: ['ros:humble-ros-base']
     container:
       image: ${{ matrix.docker_image }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install rustup dependencies
       run: |
         apt update
@@ -25,7 +25,8 @@ jobs:
         toolchain: stable
     - name: rosdep
       run: |
+        apt update && apt upgrade -y
         rosdep update
-        rosdep resolve -q ament_cmake std_msgs example_interfaces rclcpp rclcpp_action | sed '/^#/d' | xargs sudo apt install -y
+        rosdep resolve -q ament_cmake std_msgs example_interfaces | sed '/^#/d' | xargs sudo apt install -y
     - name: cargo test
       run: . /ros_entrypoint.sh && cargo test
