@@ -25,7 +25,8 @@ jobs:
         toolchain: stable
     - name: rosdep
       run: |
+        apt update && apt upgrade -y
         rosdep update
-        rosdep resolve -q ament_cmake std_msgs example_interfaces rclcpp rclcpp_action | sed '/^#/d' | xargs sudo apt install -y
+        rosdep resolve -q ament_cmake std_msgs example_interfaces | sed '/^#/d' | xargs sudo apt install -y
     - name: cargo test
       run: . /ros_entrypoint.sh && cargo test
