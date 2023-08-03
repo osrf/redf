@@ -4,6 +4,7 @@ use crate::utils::get_ros_types;
 use convert_case::{Case, Casing};
 use serde::Serialize;
 use std::collections::BTreeSet;
+use std::env;
 use std::error::Error;
 use std::path::Path;
 use tera::Tera;
@@ -50,9 +51,14 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
         _ => false,
     });
 
+    let distro = match env::var("ROS_DISTRO") {
+        Ok(val) => val,
+        Err(_) => panic!("Fail to detect ROS version, make sure ROS is sourced"),
+    };
+
     let ctx = tera::Context::from_serialize(Context {
         redf,
-        distro: env!("ROS_DISTRO").to_string(),
+        distro,
         project_name: project_name.clone(),
         packages,
         ros_types,
