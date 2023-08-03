@@ -4,7 +4,7 @@
 
 ### Supported Distros
 
-`redf` currently supports galactic and humble.
+`redf` currently supports humble and iron.
 
 ### Why use redf?
 

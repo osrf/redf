@@ -9,6 +9,8 @@ use std::error::Error;
 use std::path::Path;
 use tera::Tera;
 
+const SUPPORTED_DISTRO: &[&str] = &["humble", "iron"];
+
 #[derive(Serialize)]
 struct Context<'a> {
     redf: &'a Redf,
@@ -55,6 +57,9 @@ pub fn generate(redf: &Redf, outdir: &Path) -> Result<(), Box<dyn Error>> {
         Ok(val) => val,
         Err(_) => panic!("Fail to detect ROS version, make sure ROS is sourced"),
     };
+    if !SUPPORTED_DISTRO.contains(&distro.as_str()) {
+        println!("WARN: [${distro}] is not a supported ROS distro");
+    }
 
     let ctx = tera::Context::from_serialize(Context {
         redf,
