@@ -20,7 +20,7 @@ target_include_directories({{project_name}} INTERFACE
 )
 target_link_libraries({{project_name}} INTERFACE rclcpp::rclcpp {% if have_actions -%} rclcpp_action::rclcpp_action {%- endif %}
 {%- for pkg in packages %}
-  {%raw%}${{%endraw%}{{pkg}}_LIBRARIES}
+  {%raw%}${{%endraw%}{{pkg}}_TARGETS}
 {%- endfor %}
 )
 set_target_properties({{project_name}} PROPERTIES PUBLIC_HEADER {{project_name}}.hpp)
