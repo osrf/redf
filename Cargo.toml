@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 default-run = "redf"
 license = "Apache-2.0"
+repository = "https://github.com/osrf/redf"
+description = "Generates ROS packages which define ROS endpoints"
 
 [[bin]]
 name = "generate-schema"

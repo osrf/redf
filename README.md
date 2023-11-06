@@ -1,6 +1,6 @@
 ### redf
 
-`redf` stands for "ROS Endpoint Definition Format", it defines a yaml format which describes the endpoints of a ROS system.
+The ROS message definition format only defines the structure of a message, service or action, it does not define "endpoints", things like the topic names and qos expected by the publisher and subscriber. `redf` attempts to fill that gap by defining "endpoints" from a yaml file and using that to generate ROS packages. `redf` aims to be the equivalent of openapi/swagger for ROS.
 
 ### Supported Distros
 
@@ -11,13 +11,15 @@
 A common problem of ROS is that it only contains message definitions, there is no definition of the topics available and their QoS settings expected. `redf` aims to solve this by defining the endpoints in a yaml file and generating code so that other packages will not have wrong topics and mismatched QoS.
 
 Currently `redf` can:
-* Generate a rclcpp based ROS package with the topics, services, actions and their QoS
+
+- Generate a rclcpp based ROS package with the topics, services, actions and their QoS
 
 Other planned features includes:
-* Generate documentations
-* Generate a rclpy based package
-* Integrate with the rosidl codegen
-* Integrate with rcl
+
+- Generate documentations
+- Generate a rclpy based package
+- Integrate with the rosidl codegen
+- Integrate with rcl
 
 ### Example
 
@@ -51,6 +53,7 @@ This will generate a full, ready-to-use ROS package, it can be included into a c
 An example of using the endpoint definitions:
 
 CMakeLists.txt:
+
 ```cmake
 cmake_minimum_required(VERSION 3.16)
 project(test_node)
@@ -62,9 +65,10 @@ add_executable(test_node main.cpp)
 target_link_libraries(test_node rclcpp::rclcpp test_api::test_api)
 ```
 
-* `test_api` automatically brings in the required messages.
+- `test_api` automatically brings in the required messages.
 
 main.cpp:
+
 ```cpp
 #include <test_api.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -83,9 +87,9 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-* `MessageType` is a alias to the message type used for the topic (in this case, it is `std_msgs/msg/String`).
-* `topic_name()` returns a `std::string` with the topic name of the endpoint.
-* `qos()` returns the `rclcpp::QoS` of the endpoint.
+- `MessageType` is a alias to the message type used for the topic (in this case, it is `std_msgs/msg/String`).
+- `topic_name()` returns a `std::string` with the topic name of the endpoint.
+- `qos()` returns the `rclcpp::QoS` of the endpoint.
 
 Example for service clients:
 
@@ -106,9 +110,9 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-* `ServiceType` is a alias to the message type used for the topic (in this case, it is `example_interfaces/srv/AddTwoInts`).
-* `service_name()` returns a `std::string` with the service name of the endpoint.
-* The default service qos will be used.
+- `ServiceType` is a alias to the message type used for the topic (in this case, it is `example_interfaces/srv/AddTwoInts`).
+- `service_name()` returns a `std::string` with the service name of the endpoint.
+- The default service qos will be used.
 
 For more examples, see https://github.com/ros2/examples, usages with `redf` is the same, just replace the message types, strings and qos with those from the generated library.
 
@@ -127,11 +131,11 @@ cargo run -F json_schema --bin generate-schema
 Sometimes a system may use namespaced topics to separate the channels between similar nodes. For example, a camera array may publish their images to `/camera_0/image_raw`, `/camera_1/image_raw`... etc. This can be represented with redf via variable subsitution.
 
 ```yaml
-  - title: Camera Images
-    type: topic
-    description: Raw camera images
-    topic: '/{camera_id}/image_raw'
-    message_type: sensor_msgs/msg/Image
+- title: Camera Images
+  type: topic
+  description: Raw camera images
+  topic: '/{camera_id}/image_raw'
+  message_type: sensor_msgs/msg/Image
 ```
 
 When redf generates code for this endpoint, it will have an argument in the `topic_name` function, e.g.
@@ -166,13 +170,14 @@ You should now have code completion for redf
 ### Running Tests
 
 Requirements:
-* supported ros distro
-* rosdeps
-  * ament_cmake
-  * std_msgs
-  * example_interfaces
-  * rclcpp
-  * rclcpp_action
+
+- supported ros distro
+- rosdeps
+  - ament_cmake
+  - std_msgs
+  - example_interfaces
+  - rclcpp
+  - rclcpp_action
 
 Use `rosdep` to resolve and install the dependencies
 
