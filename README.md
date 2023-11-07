@@ -1,6 +1,8 @@
 ### redf
 
-`redf` stands for "ROS Endpoint Definition Format", it defines a yaml format which describes the endpoints of a ROS system.
+`redf` helps to manage topics, services and actions used by ROS nodes.
+
+The ROS message definition format only defines the structure of a message, service or action, it does not define "endpoints", things like the topic names and qos expected by the publisher and subscriber. `redf` attempts to fill that gap by defining "endpoints" from a yaml file and using that to generate ROS packages. `redf` aims to be the equivalent of openapi/swagger for ROS.
 
 ### Supported Distros
 
