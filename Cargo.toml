@@ -3,7 +3,6 @@ name = "redf"
 version = "0.1.0"
 edition = "2021"
 default-run = "redf"
-license = "Apache-2.0"
 license-file = "LICENSE"
 
 [[bin]]
@@ -23,3 +22,6 @@ tera = "1.16.0"
 
 [features]
 json_schema = ["schemars"]
+
+[dev-dependencies]
+schemars = "0.8.10"

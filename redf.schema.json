@@ -78,7 +78,7 @@
             "description",
             "message_type",
             "title",
-            "topic",
+            "topic_name",
             "type"
           ],
           "properties": {
@@ -101,7 +101,7 @@
             "title": {
               "type": "string"
             },
-            "topic": {
+            "topic_name": {
               "type": "string"
             },
             "type": {
