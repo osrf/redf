@@ -22,6 +22,3 @@ tera = "1.16.0"
 
 [features]
 json_schema = ["schemars"]
-
-[dev-dependencies]
-schemars = "0.8.10"
