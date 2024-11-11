@@ -9,7 +9,7 @@ use std::error::Error;
 use std::path::Path;
 use tera::Tera;
 
-const SUPPORTED_DISTRO: &[&str] = &["humble", "iron"];
+const SUPPORTED_DISTRO: &[&str] = &["humble", "iron", "jazzy"];
 
 #[derive(Serialize)]
 struct Context<'a> {
